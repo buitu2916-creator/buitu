@@ -1,42 +1,60 @@
 #include <iostream>
 #include <string>
+#define _USE_MATH_DEFINES
+#include <cmath>
 using namespace std;
 
-class Animal {
+class Shape {
 protected:
-    string name;
-    int age;
-
+    string color;
 public:
-    Animal(string n, int a) : name(n), age(a) {}
+    Shape(string c) : color(c) {}
 
-    void eat() {
-        cout << name << " is eating..." << endl;
+    void describe() {
+        cout << "Shape: " << color << endl;
     }
+
+    double area() { return 0.0; }
 };
 
-class Dog : public Animal {
+class Circle : public Shape {
 private:
-    string breed;
-
+    double radius;
 public:
-    Dog(string n, int a, string b) : Animal(n, a), breed(b) {}
+    Circle(string c, double r) : Shape(c), radius(r) {}
 
-    void bark() {
-        cout << name << " says: Woof!" << endl;
+    void describe() {
+        Shape::describe();   // gọi lại logic cha
+        cout << "Circle | radius = " << radius << endl;
     }
 
-    void display() {
-        cout << "Name: " << name
-             << " | Age: " << age
-             << " | Breed: " << breed << endl;
+    double area() { return M_PI * radius * radius; }
+};
+
+class Rectangle : public Shape {
+private:
+    double width, height;
+public:
+    Rectangle(string c, double w, double h)
+        : Shape(c), width(w), height(h) {}
+
+    void describe() {
+        Shape::describe();   // gọi lại logic cha
+        cout << "Rectangle | " << width << " x " << height << endl;
     }
+
+    double area() { return width * height; }
 };
 
 int main() {
-    Dog d("Buddy", 3, "Labrador");
-    d.eat();      // kế thừa từ Animal
-    d.bark();
-    d.display();
-    return 0;
+    Circle    c("red", 5.0);
+    Rectangle r("blue", 4.0, 6.0);
+
+    c.describe();
+    cout << "Area = " << c.area() << endl;
+
+    cout << endl;
+
+    r.describe();
+    cout << "Area = " << r.area() << endl;
 }
