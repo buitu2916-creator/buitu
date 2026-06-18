@@ -1,47 +1,53 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-class Base {
-public:    int pub   = 1;
-protected: int prot  = 2;
-private:   int priv  = 3;
-};
-
-class DerivedPublic : public Base {
+class Employee {
+protected:
+    string name;
+    double hoursWorked;
+    double hourlyRate;
 public:
-    void test() {
-        cout << pub;    // OK - vẫn là public
-        cout << prot;   // OK - vẫn là protected
-        // cout << priv; // LỖI - private không kế thừa
+    Employee(string n, double h, double r)
+        : name(n), hoursWorked(h), hourlyRate(r) {}
+
+    virtual double calculatePay() {
+        return hoursWorked * hourlyRate;
+    }
+
+    void display() {
+        cout << name << " | Pay: " << calculatePay() << endl;
     }
 };
 
-class DerivedProtected : protected Base {
+class Manager : public Employee {
+private:
+    double bonus;
 public:
-    void test() {
-        cout << pub;    // OK - trở thành protected
-        cout << prot;   // OK - vẫn là protected
-        // cout << priv; // LỖI
+    Manager(string n, double h, double r, double b)
+        : Employee(n, h, r), bonus(b) {}
+
+    double calculatePay() override {
+        return Employee::calculatePay() + bonus;  // base + bonus
     }
 };
 
-class DerivedPrivate : private Base {
+class Intern : public Employee {
 public:
-    void test() {
-        cout << pub;    // OK - trở thành private
-        cout << prot;   // OK - trở thành private
-        // cout << priv; // LỖI
+    Intern(string n, double h, double r)
+        : Employee(n, h, r) {}
+
+    double calculatePay() override {
+        return Employee::calculatePay() * 0.8;   // trừ 20% thuế
     }
 };
 
 int main() {
-    DerivedPublic dp;
-    dp.pub;           // OK - pub vẫn là public
-    // dp.prot;       // LỖI - prot là protected, không truy cập từ ngoài
+    Employee e("Alice",  40, 50);
+    Manager  m("Bob",    40, 50, 500);
+    Intern   i("Charlie",40, 50);
 
-    DerivedProtected dpr;
-    // dpr.pub;       // LỖI - pub trở thành protected
-
-    DerivedPrivate dpv;
-    // dpv.pub;       // LỖI - pub trở thành private
+    e.display();
+    m.display();
+    i.display();
 }
