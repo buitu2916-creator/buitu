@@ -1,45 +1,53 @@
 #include <iostream>
-#include <string>
 using namespace std;
 
-class Vehicle {
+class BankAccount {
 protected:
-    string brand;
-    int year;
-
+    double balance;
 public:
-    Vehicle(string b, int y) : brand(b), year(y) {
-        cout << "Vehicle ctor" << endl;
+    BankAccount(double b) : balance(b) {}
+
+    void deposit(double amount) {
+        balance += amount;
+        cout << "Deposited " << amount
+             << " | Balance: " << balance << endl;
     }
 
-    ~Vehicle() {
-        cout << "Vehicle dtor" << endl;
+    virtual void withdraw(double amount) {
+        if (amount > balance) {
+            cout << "Insufficient funds!" << endl;
+        } else {
+            balance -= amount;
+            cout << "Withdrew " << amount
+                 << " | Balance: " << balance << endl;
+        }
     }
 };
 
-class Car : public Vehicle {
+class SavingsAccount : public BankAccount {
 private:
-    int numDoors;
-
+    double minimumBalance;
 public:
-    // Gọi Vehicle constructor qua initializer list
-    Car(string b, int y, int doors)
-        : Vehicle(b, y), numDoors(doors) {
-        cout << "Car ctor" << endl;
-    }
+    SavingsAccount(double b, double minBal)
+        : BankAccount(b), minimumBalance(minBal) {}
 
-    ~Car() {
-        cout << "Car dtor" << endl;
-    }
-
-    void display() {
-        cout << brand << " (" << year << ") - "
-             << numDoors << " doors" << endl;
+    void withdraw(double amount) override {
+        if (balance - amount < minimumBalance) {
+            cout << "Denied! Must keep minimum balance of "
+                 << minimumBalance << endl;
+        } else {
+            balance -= amount;
+            cout << "Withdrew " << amount
+                 << " | Balance: " << balance << endl;
+        }
     }
 };
 
 int main() {
-    Car c("Toyota", 2022, 4);
-    c.display();
-    return 0;
+    SavingsAccount sa(1000.0, 200.0);
+
+    sa.deposit(500.0);
+    sa.withdraw(1200.0);  // bị từ chối (1500 - 1200 = 300 > 200 → OK thực ra)
+    sa.withdraw(1350.0);  // bị từ chối (1500 - 1350 = 150 < 200)
+    sa.withdraw(1200.0);  // OK (1500 - 1200 = 300 >= 200)
 }
