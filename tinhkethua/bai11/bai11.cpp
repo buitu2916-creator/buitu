@@ -3,10 +3,10 @@ using namespace std;
 
 class Account {
 private:
-    double balance; // Giữ thuộc tính private [cite: 134]
+    double balance; // Giữ thuộc tính private 
 
 protected:
-    // Cung cấp protected getter/setter cho lớp con sử dụng [cite: 131, 135]
+    // Cung cấp protected getter/setter cho lớp con sử dụng 
     double getBalance() const { // 
         return balance; 
     }
@@ -33,15 +33,15 @@ public:
     }
 };
 
-// PremiumAccount kế thừa public từ Account [cite: 136]
+// PremiumAccount kế thừa public từ Account 
 class PremiumAccount : public Account {
 public:
     PremiumAccount(double initialBalance) : Account(initialBalance) {}
 
     void addBonus() {
-        // Thay vì truy cập balance trực tiếp, dùng getBalance() và setBalance() [cite: 136]
-        double currentBalance = getBalance(); // [cite: 136]
-        setBalance(currentBalance + 100000);   // Thưởng 100k [cite: 136]
+        // Thay vì truy cập balance trực tiếp, dùng getBalance() và setBalance() 
+        double currentBalance = getBalance(); 
+        setBalance(currentBalance + 100000);   // Thưởng 100k 
     }
 };
 
